@@ -1,0 +1,41 @@
+
+
+CODBAIRRO: Number of Bairro
+
+BAIRRO: Name of Bairro
+
+CODRA: Number of RA
+
+CODRA_TXT: Number of RA as string
+
+RA: Name of RA
+
+CODRP: Number of RP
+
+CODAP: Number of AP
+
+SHAPESTAre: Estimated Area of Bairro in m^2
+
+SHAPESTLen: ???
+
+OBJECTID: ???
+
+POP: Population of Bairro
+
+Zone_Type: For modeling purposes
+
+POPDEN: Population per square kilometer
+
+Agri: Number of 2017 employees who worked in agriculture/fishing/ranching
+
+Emp: Number of 2017 employees
+
+AgriRate: Agri/Emp
+
+EmpRate: Emp/POP
+
+Zone_TypeN: Numerical version of Zone_Type. 0 is Conservation, 1 is Semi-Protected, 2 is Unprotected
+
+
+
+

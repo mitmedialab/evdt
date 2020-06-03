@@ -1,0 +1,14 @@
+FieldName,LongName,Category
+RA,RA,Diversos
+CODAP,AP,Diversos
+POP,População,Demografia
+POPDEN,Densidade Populacional,Demografia
+Emp,2017 Emprego Total,Economia
+Agri,2017 Emprego Agrícola,Economia
+EmpRate,Taxa de Emprego,Economia
+AgriRate,Taxa de Emprego Agrícola,Economia
+nome,Nome,Economia
+legislacao,Legislacao,Diversos
+tutela,Tutela,Diversos
+atocriatip,Ato Cria Tipo,Diversos
+atocrianum,Ato Cria Nome,Diversos

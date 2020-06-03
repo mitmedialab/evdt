@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><MD_Metadata xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:xalan="http://xml.apache.org/xalan" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.isotc211.org/2005/gmd">
+    <characterSet>
+        <MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115">utf8</MD_CharacterSetCode>
+    </characterSet>
+    <hierarchyLevel>
+        <MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</MD_ScopeCode>
+    </hierarchyLevel>
+    <hierarchyLevelName>
+        <gco:CharacterString>dataset</gco:CharacterString>
+    </hierarchyLevelName>
+    <contact gco:nilReason="missing"/>
+    <dateStamp gco:nilReason="missing"/>
+    <metadataStandardName>
+        <gco:CharacterString>ISO 19139 Geographic Information - Metadata - Implementation Specification</gco:CharacterString>
+    </metadataStandardName>
+    <metadataStandardVersion>
+        <gco:CharacterString>2007</gco:CharacterString>
+    </metadataStandardVersion>
+    <identificationInfo>
+        <MD_DataIdentification>
+            <citation>
+                <CI_Citation>
+                    <title>
+                        <gco:CharacterString>SMU_Zoneamento_Urbano</gco:CharacterString>
+                    </title>
+                    <date gco:nilReason="missing"/>
+                </CI_Citation>
+            </citation>
+            <abstract>
+                <gco:CharacterString>Camadas do zoneamento urbano vigente da Cidade do Rio de Janeiro, produzidas pela Secretaria Municipal de Urbanismo.Mais detalhes sobre o zoneamento, acesse o Sistema Legislação Bairro a Bairro no link: http://mapas.rio.rj.gov.br/Gestão: Gerência de Normas e Informações Urbanísticas - SMU/SUBU/CGPP/GNIUProdução: Coordenadoria de Planejamento Local - SMU/SUBU/CGPP/CPLGerência de Normas e Informações Urbanísticas - SMU/SUBU/CGPP/GNIUNotas metodológicas:As poligonais são desenhadas utilizando como guia as camadas de meio-fio, quadras e curvas de nível. Sua representação segue quatro critérios básicos: 1 - Quando ambos os lados do logradouro são incluídos:Exemplo - ZR3 Decreto 322/1976: “...Rua Toneleros (incluída) da Praça Cardeal Arcoverde até a Rua.Siqueira Campos, por esta (incluída) da Rua Toneleros até a ...”.2 - Quando apenas um dos lados do logradouro é incluído:Exemplo – ZR3 Decreto 322/1976 “... Rua António Parreiras e Rua Jangadeiros até a Rua Montenegro por esta (excluída) da Rua Barão da Torre até a Rua Nascimento Silva, por esta (excluída) da Rua Montenegro até a Rua Joana Angélica, por esta (incluindo apenas o lado par) da Rua Nascimento Silva até a Rua Redentor, por esta excluída), Avenida Epitácio Pessoa (excluída) da Rua Redentor até a Rua Prudente de Morais.3 - Quando é Centro de Bairro em ambos os lados do logradouro:Exemplo -  Rua Voluntário da Pátria – O logradouro na legislação é indicado como CB, tanto o lado par como o impar são CB14 - Quando é Centro de Bairro em apenas um dos lados:Se utiliza o eixo do logradouro que se encontra no shape SMU_Logradouro para indicar o lado que se encontra em CB, ZC e etc. (Ex. apenas o lado impar da Rua General San Martin é CB1).</gco:CharacterString>
+            </abstract>
+            <purpose>
+                <gco:CharacterString>Camadas de zoneamento urbano vigente da Secretaria Municipal de Urbanismo. Mais detalhes sobre o zoneamento, acesse o Sistema Legislação Bairro a Bairro no link: http://mapas.rio.rj.gov.br/</gco:CharacterString>
+            </purpose>
+            <credit>
+                <gco:CharacterString>Gerência de Normas e Informações Urbanísticas - SMU/SUBU/CGPP/GNIU</gco:CharacterString>
+            </credit>
+            <descriptiveKeywords>
+                <MD_Keywords>
+                    <keyword>
+                        <gco:CharacterString>zoneamento</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>zona</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>legislação urbana</gco:CharacterString>
+                    </keyword>
+                </MD_Keywords>
+            </descriptiveKeywords>
+            <descriptiveKeywords>
+                <MD_Keywords>
+                    <keyword>
+                        <gco:CharacterString>zoneamento</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>zona</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>legislação urbana</gco:CharacterString>
+                    </keyword>
+                </MD_Keywords>
+            </descriptiveKeywords>
+            <descriptiveKeywords>
+                <MD_Keywords>
+                    <keyword>
+                        <gco:CharacterString>zoneamento</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>zona</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>legislação urbana</gco:CharacterString>
+                    </keyword>
+                </MD_Keywords>
+            </descriptiveKeywords>
+            <resourceConstraints>
+                <MD_Constraints>
+                    <useLimitation>
+                        <gco:CharacterString>As camadas de zoneamento são de autoria da Gerência de Normas e Informações Urbanísticas da Secretaria de Urbanismo, e podem ser utilizados livremente desde que se faça a devida referência como fonte de informação.</gco:CharacterString>
+                    </useLimitation>
+                </MD_Constraints>
+            </resourceConstraints>
+            <language gco:nilReason="missing"/>
+            <characterSet>
+                <MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" codeSpace="ISOTC211/19115">utf8</MD_CharacterSetCode>
+            </characterSet>
+            <extent>
+                <EX_Extent>
+                    <geographicElement>
+                        <EX_GeographicBoundingBox>
+                            <westBoundLongitude>
+                                <gco:Decimal>-43</gco:Decimal>
+                            </westBoundLongitude>
+                            <eastBoundLongitude>
+                                <gco:Decimal>-43</gco:Decimal>
+                            </eastBoundLongitude>
+                            <southBoundLatitude>
+                                <gco:Decimal>-23</gco:Decimal>
+                            </southBoundLatitude>
+                            <northBoundLatitude>
+                                <gco:Decimal>-22</gco:Decimal>
+                            </northBoundLatitude>
+                        </EX_GeographicBoundingBox>
+                    </geographicElement>
+                </EX_Extent>
+            </extent>
+        </MD_DataIdentification>
+    </identificationInfo>
+</MD_Metadata>
