@@ -28,11 +28,11 @@ class Map(tk.Canvas):
 
     #Define Projections (Only Mercator used at this time)
     projections = {
-        'mercator': pyproj.Proj(init="epsg:3857"),
+        'mercator': pyproj.Proj("epsg:3857"),
         'spherical': pyproj.Proj('+proj=ortho +lon_0=28 +lat_0=47')
         }
 
-    screenwidth, screenheight = 1300, 800
+    screenwidth, screenheight = 1000, 600
     
     def __init__(self, root, shapefiles, **kwargs):
         """INITIALIZES THE MAP CLASS
@@ -49,7 +49,8 @@ class Map(tk.Canvas):
         """
         
         super().__init__(root, width=self.screenwidth, height=self.screenheight)
-        
+        # super().__init__(root, width=root.winfo_width(), height=root.winfo_height())
+
         #Create display defaults
         self.proj = 'mercator'
         self.ratio = 1
@@ -62,12 +63,11 @@ class Map(tk.Canvas):
         
         
         #Set geographic coordinates and zoom level of map, initialize shapes
-        if 'offset_and_ratio' in kwargs:
-            offset_and_ratio = kwargs.pop('offset_and_ratio')
-            self.offset = (offset_and_ratio[0], offset_and_ratio[1])
-            self.ratio = offset_and_ratio[2]
+        if 'lat_lon_zoom' in kwargs:
+            lat_lon_zoom = kwargs.pop('lat_lon_zoom')
+            self.default_offset, self.default_ratio = self.set_canvas_location(lat_lon_zoom[0], lat_lon_zoom[1], lat_lon_zoom[2])
         else:
-            self.default_offset, self.default_ratio = self.set_canvas_location(-43.5765151113451, -22.9969539088035, 0.03)
+            self.default_offset, self.default_ratio = self.set_canvas_location(-43.5765151113451, -23.03, 0.03)
 
 
         self.polyimages = []
@@ -98,6 +98,11 @@ class Map(tk.Canvas):
             self.color_title = kwargs.pop('color_title')
         else:
             self.color_title = []
+            
+        if 'null_zeros' in kwargs:
+            self.null_zeros = kwargs.pop('null_zeros')
+        else:
+            self.null_zeros = 0
         
         
         #Draw and Place Map
@@ -207,6 +212,7 @@ class Map(tk.Canvas):
         
         #Pull all the appropriate values from each record
         for record in sf.records():
+            # if valuename != {}
             values.append(record[valuename])
         
         
@@ -221,13 +227,18 @@ class Map(tk.Canvas):
         #Calculate the range of values, including the smallest positive value
         minim = min(values)
         maxim = max(values)
+        print(minim)
+        print(maxim)
         valuerange = maxim - minim
         if minim <= 0 and strdict == []:
             values =[]
             for record in sf.records():
                 if record[valuename]>0:
                     values.append(record[valuename])
-            smallpos = min(values)
+            if values == []:
+                smallpos = []
+            else:
+                smallpos = min(values)
         else:
             smallpos = minim
             
@@ -274,9 +285,11 @@ class Map(tk.Canvas):
         if 'color_range' in kwargs:
             color_range = kwargs.pop('color_range')
             color_name = color_range[0]
-        if color_name != []:
+            print(color_range)
+            print(color_name)
+        if color_name != [] and color_name != 'Nenhum':
             valuerange, minim, smallpos, strdict = self.colorrange(sf, color_name)
-            colormap = cm.get_cmap('bwr', 48)
+            colormap = cm.get_cmap('YlGn', 48)
             norm = colors.Normalize(minim, minim+valuerange)
         
         
@@ -293,15 +306,20 @@ class Map(tk.Canvas):
                 coordinates = sum((self.to_canvas_coordinates(*c) for c in land.exterior.coords), ())
                 
                 
-                #Set appropriate color (currently a logarithmic scaling)
-                if color_name != []:
+                #Set appropriate color
+                if color_name != [] and color_name != 'Nenhum':
                     value = shaperec.record[color_name]
+                    
                     if strdict != []:
                         value = strdict[value]
                     normvalue = norm(value)
                     fill1 = colormap(normvalue)[0:3]
                     fill = [int(x*255) for x in fill1]
                     alpha = 0.5
+                    if self.null_zeros == 1:
+                        if value == 0:
+                            alpha = 0
+                            
                 else:
                     fill = self.winfo_rgb('green')
                     alpha = 0
@@ -312,29 +330,29 @@ class Map(tk.Canvas):
                 self.polyimages.append(newimage)
                 
                 
-        #Add Colorbar to map in bottom left corner
-        if color_name != []:    
-            plt.ioff()
-            fig = plt.figure(figsize=(2, 8))
-            ax1 = fig.add_axes([0.05, 0.01, 0.5, 0.95])
-            canvas = FigureCanvas(fig)
-            cb1 = colorbar.ColorbarBase(ax1, cmap=colormap,
-                                    norm=norm,
-                                    orientation='vertical')
-            if self.color_title != []:
-                cb1.set_label(self.color_title)
-            else:
-                cb1.set_label(color_name)
+        # #Add Colorbar to map in bottom left corner
+        # if color_name != [] and color_name != 'Nenhum':    
+        #     plt.ioff()
+        #     fig = plt.figure(figsize=(2, 8))
+        #     ax1 = fig.add_axes([0.05, 0.01, 0.5, 0.95])
+        #     canvas = FigureCanvas(fig)
+        #     cb1 = colorbar.ColorbarBase(ax1, cmap=colormap,
+        #                             norm=norm,
+        #                             orientation='vertical')
+        #     if self.color_title != []:
+        #         cb1.set_label(self.color_title)
+        #     else:
+        #         cb1.set_label(color_name)
             
-            canvas.draw() 
-            s, (width, height) = canvas.print_to_buffer()
-            im = Image.frombytes("RGBA", (width, height), s)
-            im = im.resize((2*65, 8*65), Image.ANTIALIAS)
-            self.colorimage = ImageTk.PhotoImage(im)
-            self.create_image(0,self.screenheight,image=self.colorimage,anchor='sw')
-            plt.close(fig)
-            del(canvas)
-            del(s)
+        #     canvas.draw() 
+        #     s, (width, height) = canvas.print_to_buffer()
+        #     im = Image.frombytes("RGBA", (width, height), s)
+        #     im = im.resize((2*65, 8*65), Image.ANTIALIAS)
+        #     self.colorimage = ImageTk.PhotoImage(im)
+        #     self.create_image(0,self.screenheight,image=self.colorimage,anchor='sw')
+        #     plt.close(fig)
+        #     del(canvas)
+        #     del(s)
                 
             
     def draw_polygon(self, coordinates, **kwargs):       
@@ -454,30 +472,30 @@ class Map(tk.Canvas):
                     )
                 
                 
-        #Add Colorbar to map in bottom left corner
-        if color_name != []:    
-            plt.ioff()
-            fig = plt.figure(figsize=(2, 8))
-            ax1 = fig.add_axes([0.05, 0.01, 0.5, 0.95])
-            canvas = FigureCanvas(fig)
-            cb1 = colorbar.ColorbarBase(ax1, cmap=colormap,
-                                    norm=norm,
-                                    orientation='vertical')
+        # #Add Colorbar to map in bottom left corner
+        # if color_name != []:    
+        #     plt.ioff()
+        #     fig = plt.figure(figsize=(2, 8))
+        #     ax1 = fig.add_axes([0.05, 0.01, 0.5, 0.95])
+        #     canvas = FigureCanvas(fig)
+        #     cb1 = colorbar.ColorbarBase(ax1, cmap=colormap,
+        #                             norm=norm,
+        #                             orientation='vertical')
             
-            if colortitle != []:
-                cb1.set_label(colortitle)
-            else:
-                cb1.set_label(color_name)
+        #     if colortitle != []:
+        #         cb1.set_label(colortitle)
+        #     else:
+        #         cb1.set_label(color_name)
                 
-            canvas.draw() 
-            s, (width, height) = canvas.print_to_buffer()
-            im = Image.frombytes("RGBA", (width, height), s)
-            im = im.resize((2*65, 8*65), Image.ANTIALIAS)
-            self.colorimage2 = ImageTk.PhotoImage(im)
-            self.create_image(2*65,self.screenheight,image=self.colorimage2,anchor='sw')
-            plt.close(fig)
-            del(canvas)
-            del(s)
+        #     canvas.draw() 
+        #     s, (width, height) = canvas.print_to_buffer()
+        #     im = Image.frombytes("RGBA", (width, height), s)
+        #     im = im.resize((2*65, 8*65), Image.ANTIALIAS)
+        #     self.colorimage2 = ImageTk.PhotoImage(im)
+        #     self.create_image(2*65,self.screenheight,image=self.colorimage2,anchor='sw')
+        #     plt.close(fig)
+        #     del(canvas)
+        #     del(s)
                 
 
     def draw_water(self):
@@ -507,7 +525,7 @@ class Map(tk.Canvas):
 if str.__eq__(__name__, '__main__'):
     root_window = tk.Tk()
     root_window.title('MapWindow')
-    sf = shapefile.Reader('./FormatedShapefiles/Protected Areas/Áreas_Protegidas_edited2.shp')
+    sf = shapefile.Reader('/home/jackreid/Google Drive/School/Research/Space Enabled/Code/Decisions/Data/Chile/Shapefiles/chl_admbnda_adm1_bcn2018.shp')
     # py_giss = Map(root_window, [sf],
                   # background_image='./map.jpg', color_range=['POP'])
     py_giss = Map(root_window, [sf])

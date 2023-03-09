@@ -16,12 +16,12 @@ from shapely.geometry.polygon import Polygon
 import shapely.ops as ops
 import shapely
 
-r = shapefile.Reader('./FormatedShapefiles/Planning Zones/Zonas.shp')
+r = shapefile.Reader('/home/jackreid/Documents/School/Research/Space Enabled/Code/Decisions/Data/Santiago/Shapefiles/Metro_comunas_simple.shp')
 
        
         
 # Create a new shapefile in memory
-w = shapefile.Writer('./FormatedShapefiles/Planning Zones/Zonas_base.shp')
+w = shapefile.Writer('/home/jackreid/Documents/School/Research/Space Enabled/Code/Decisions/Data/Santiago/Shapefiles/Metro_comunas_simple2.shp')
 
 # Copy over the existing fields
 fields = r.fields
@@ -38,7 +38,7 @@ for row in records:
     args = row
     w.record(*args)
     
-input_projection = Proj(init="epsg:29183")
+input_projection = Proj(init="epsg:3857")
 output_projection = Proj(init="epsg:4326")
 
 geom = r.shapes()

@@ -50,10 +50,21 @@ def mangrovehealthchange(root, zoneshp, mangrovehealthshp):
             zoneboundary = zoneshaperec.shape
             zoneboundary = shapely.geometry.shape(zoneboundary)
             if mangroveboundary.intersects(zoneboundary):
-                zonestatus = zoneshaperec.record['Zone_TypeN']
+                zonestatus_str = zoneshaperec.record['A_grupo']
+                if zonestatus_str == 'Tombamento':
+                    zonestatus = 3
+                elif zonestatus_str == 'Zona de Amortecimento':
+                    zonestatus = 2
+                if zonestatus_str == 'Uso Sustentável':
+                    zonestatus = 1
+                elif zonestatus_str == 'Proteção Integral':
+                    zonestatus = 3
+                
                 if zonestatus == 0:
-                    health = health + 1
+                    health = health + 2
                 elif zonestatus == 1:
+                    health = health + 1
+                elif zonestatus == 2:
                     if health < 3:
                         health = health + 1
                     elif health > 4:
@@ -91,38 +102,38 @@ def mangrovehealthchange(root, zoneshp, mangrovehealthshp):
     
     
     
-    for shaperec in self.zone_default.iterShapeRecords():
-            boundary = shaperec.shape # get a boundary polygon
-            if shapely.geometry.Point((geox, geoy)).within(shapely.geometry.shape(boundary)): # make a point and see if it's in the polygon
-                #Pull data from shapefile
-                name = shaperec.record[1] # get the second field of the corresponding record
-                population = shaperec.record['POP']
-                zonetype = shaperec.record['Zone_Type']
-                emp = shaperec.record['Emp']
-                agri= shaperec.record['Agri']
-                print("The point is in", name)
+    # for shaperec in self.zone_default.iterShapeRecords():
+    #         boundary = shaperec.shape # get a boundary polygon
+    #         if shapely.geometry.Point((geox, geoy)).within(shapely.geometry.shape(boundary)): # make a point and see if it's in the polygon
+    #             #Pull data from shapefile
+    #             name = shaperec.record[1] # get the second field of the corresponding record
+    #             population = shaperec.record['POP']
+    #             zonetype = shaperec.record['Zone_Type']
+    #             emp = shaperec.record['Emp']
+    #             agri= shaperec.record['Agri']
+    #             print("The point is in", name)
                 
-                #Calculate area of zone
-                geom = shapely.geometry.polygon.Polygon(boundary.points)
-                geom_area = shapely.ops.transform(
-                        partial(
-                            pyproj.transform,
-                            pyproj.Proj(init='EPSG:4326'),
-                            pyproj.Proj(init='epsg:3857')),
-                            shapely.geometry.shape(geom))
-                area = geom_area.area
+    #             #Calculate area of zone
+    #             geom = shapely.geometry.polygon.Polygon(boundary.points)
+    #             geom_area = shapely.ops.transform(
+    #                     partial(
+    #                         pyproj.transform,
+    #                         pyproj.Proj(init='EPSG:4326'),
+    #                         pyproj.Proj(init='epsg:3857')),
+    #                         shapely.geometry.shape(geom))
+    #             area = geom_area.area
                 
-                #Calculate area of mangrove loss in zone
-                area_of_loss = 0;
-                for shaperec in self.shape_mangroveloss.iterShapeRecords():
-                    m_boundary = shaperec.shape # get a boundary polygon
-                    m_boundary_shape = shapely.geometry.shape(m_boundary)
-                    if m_boundary_shape.intersects(shapely.geometry.shape(boundary)):
-                        m_geom = shapely.geometry.polygon.Polygon(m_boundary.points)
-                        m_geom_area = shapely.ops.transform(
-                            partial(
-                                pyproj.transform,
-                                pyproj.Proj(init='EPSG:4326'),
-                                pyproj.Proj(init='epsg:3857')),
-                            shapely.geometry.shape(m_geom))
-                        area_of_loss = area_of_loss + m_geom_area.area
+    #             #Calculate area of mangrove loss in zone
+    #             area_of_loss = 0;
+    #             for shaperec in self.shape_mangroveloss.iterShapeRecords():
+    #                 m_boundary = shaperec.shape # get a boundary polygon
+    #                 m_boundary_shape = shapely.geometry.shape(m_boundary)
+    #                 if m_boundary_shape.intersects(shapely.geometry.shape(boundary)):
+    #                     m_geom = shapely.geometry.polygon.Polygon(m_boundary.points)
+    #                     m_geom_area = shapely.ops.transform(
+    #                         partial(
+    #                             pyproj.transform,
+    #                             pyproj.Proj(init='EPSG:4326'),
+    #                             pyproj.Proj(init='epsg:3857')),
+    #                         shapely.geometry.shape(m_geom))
+    #                     area_of_loss = area_of_loss + m_geom_area.area

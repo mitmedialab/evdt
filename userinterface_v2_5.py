@@ -170,7 +170,7 @@ class EVDT(tk.Canvas):
         
         
         #Make Unit of Analysis Label & Dropdown
-        lbl_units = tk.Label(frame_layer, text='Unidade de Análise', font=('Arial',24))
+        lbl_units = tk.Label(frame_layer, text='Unidade de Análise', font=('Arial',18))
         lbl_units.grid(column=0, row=0, ipadx=gridpadding)
         
 
@@ -186,15 +186,15 @@ class EVDT(tk.Canvas):
                            *list(self.uoa.longname_modes.keys()),
                            command=lambda _: self.replace_map_image())
         unitoptionlist.grid(column=0, row=1, ipadx=gridpadding)
-        
+        unitoptionlist.config(font=('Arial',18))
         
         #Make UOA Fill Label (Dropdown Added During Map Window Creation)
-        lbl_layers = tk.Label(frame_layer, text='Cor da zona', font=('Arial',24))
+        lbl_layers = tk.Label(frame_layer, text='Cor da zona', font=('Arial',18))
         lbl_layers.grid(column=1, row=0, ipadx=gridpadding)
 
             
         #Make Map Images Label & Dropdown
-        lbl_layers = tk.Label(frame_layer, text='Imagem do Mapa', font=('Arial',24))
+        lbl_layers = tk.Label(frame_layer, text='Imagem do Mapa', font=('Arial',18))
         lbl_layers.grid(column=2, row=0, ipadx=gridpadding)
         
         
@@ -209,10 +209,11 @@ class EVDT(tk.Canvas):
                           *list(self.map_image.longname_modes.keys()), 
                           command=lambda _: self.replace_map_image())
         mapoptionlist.grid(column=2, row=1, ipadx=gridpadding)
+        mapoptionlist.config(font=('Arial',18))
         
         
         #Make Overlays Label & Dropdown
-        lbl_layers = tk.Label(frame_layer, text='Overlays', font=('Arial',24))
+        lbl_layers = tk.Label(frame_layer, text='Overlays', font=('Arial',18))
         lbl_layers.grid(column=3, row=0, ipadx=gridpadding) 
         
 
@@ -227,10 +228,11 @@ class EVDT(tk.Canvas):
                           *list(self.overlay.longname_modes.keys()), 
                           command=lambda _: self.replace_map_image())
         overlayoptionlist.grid(column=3, row=1, ipadx=gridpadding)
+        overlayoptionlist.config(font=('Arial',18))
         
         
         #Make Zoom Label, Entry, and Button
-        zoomlabel = tk.Label(frame_layer, text='Zoom', font=('Arial',24))
+        zoomlabel = tk.Label(frame_layer, text='Zoom', font=('Arial',18))
         zoomlabel.grid(column=4, row=0, ipadx=gridpadding)
         self.zoomslider = tk.Scale(frame_layer, 
                                    from_=50, to=500, 
@@ -337,8 +339,8 @@ class EVDT(tk.Canvas):
         
         
         #Make Frame
-        frame_map = tk.Frame(root)
-        frame_map.grid(column=0, row=1)\
+        frame_map = tk.Frame(root, width=500, height=400,)
+        frame_map.grid(column=0, row=1)
             
         
         #Select specific UOA shapefile
@@ -347,7 +349,7 @@ class EVDT(tk.Canvas):
         
         #Make Color Fill Dropdown Menu
         self.uoa_color_optionlist =  self.make_fill_list(self.frame_buttons, shps[0])
-        
+        self.uoa_color_optionlist.config(font=('Arial',18))
         
         #Select map image and UOA color fill
         background_image = self.map_image.filepaths[self.map_image.setting_index.get()]
@@ -362,7 +364,9 @@ class EVDT(tk.Canvas):
         MAP = MapWindow.Map(frame_map,shps,
                                background_image = background_image, 
                                color_range= [color_range],
-                               color_title=color_title)
+                               color_title=color_title,
+#                               lat_lon_zoom=[-43.5765151113451, -22.9969539088035, 0.03]
+                               lat_lon_zoom=[-43.5765151113451, -23.03, 0.03])
         MAP.bind("<Button-1>", self.print_coords)
         MAP.bind("<Double-Button-1>", lambda e: self.uoa_type(self.clickname))
 
@@ -747,12 +751,12 @@ class EVDT(tk.Canvas):
                     
                     #Calculate area of zone
                     geom = shapely.geometry.polygon.Polygon(boundary.points)
-                    geom_area = shapely.ops.transform(
-                            partial(
-                                pyproj.transform,
-                                pyproj.Proj(init='EPSG:4326'),
-                                pyproj.Proj(init='epsg:3857')),
-                                shapely.geometry.shape(geom))
+                    print(boundary.points[1])
+                    wgs84 = pyproj.CRS('EPSG:4326')
+                    to = pyproj.CRS('EPSG:3857')
+                    project = pyproj.Transformer.from_crs(wgs84, to, always_xy=True).transform
+
+                    geom_area = shapely.ops.transform(project, geom)
                     area = geom_area.area
                     
                     #Calculate area of mangrove loss in zone
@@ -762,12 +766,7 @@ class EVDT(tk.Canvas):
                         m_boundary_shape = shapely.geometry.shape(m_boundary)
                         if m_boundary_shape.intersects(shapely.geometry.shape(boundary)):
                             m_geom = shapely.geometry.polygon.Polygon(m_boundary.points)
-                            m_geom_area = shapely.ops.transform(
-                                partial(
-                                    pyproj.transform,
-                                    pyproj.Proj(init='EPSG:4326'),
-                                    pyproj.Proj(init='epsg:3857')),
-                                shapely.geometry.shape(m_geom))
+                            m_geom_area = shapely.ops.transform(project, m_geom)
                             area_of_loss = area_of_loss + m_geom_area.area
              
                     for entry in self.list_uoa_boxes.keys():
@@ -995,7 +994,7 @@ class EVDT(tk.Canvas):
         self.uoa.shps_present = self.uoa.shps
         self.uoa.shps_future = self.uoa.shps
         
-        self.mangrovehealth_future = FutureCalculations.mangrovehealthchange(self, self.zones.shps[1], self.overlays.shps[2])
+        self.mangrovehealth_future = FutureCalculations.mangrovehealthchange(self, self.uoa.shps[2], self.overlay.shps[2])
         self.overlay.shps_future.append(self.mangrovehealth_future)
         
         self.show_future()
